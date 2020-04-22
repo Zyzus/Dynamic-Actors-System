@@ -35,3 +35,6 @@ Commands:
 /acreate - Create new actor
 
 /aedit - You are editing an existing actor
+
+Video presentation:
+https://www.youtube.com/watch?v=z8Te_H22s-U

@@ -1,6 +1,4 @@
-# Dynamic-Actors-System
-
-Dynamic Actors System (Beta 3.0) [MySQL BlueG R41-4] by Zyzu
+# Dynamic Actors System (Beta 3.0) [MySQL BlueG R41-4] by Zyzu
 
 Credits:
 

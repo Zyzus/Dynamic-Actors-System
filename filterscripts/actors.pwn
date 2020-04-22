@@ -362,8 +362,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                             ActorCreate[playerid][ac_skinid] = ActorCache[id][aSkin];
 
                         Streamer_SetIntData(STREAMER_TYPE_ACTOR, ActorCache[ActorCreate[playerid][ae_IDActor]][aID], E_STREAMER_MODEL_ID, ActorCreate[playerid][ac_skinid]);
-                        if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "%i. %s\n(Naciśnij N aby wejść w interakcje)", id, ActorCreate[playerid][ac_name]);
-                        else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){00EBFF}\n(Naciśnij N aby wejść w interakcje)", id, ActorCreate[playerid][ac_name]);
+                        if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "{E6E6F0}%i. %s\n(Naciśnij N aby wejść w interakcje)", id, ActorCache[id][aName]);
+                        else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){E6E6F0}\n(Naciśnij N aby wejść w interakcje)", id, ActorCache[id][aName]);
                         UpdateDynamic3DTextLabelText(ActorCache[id][a3DTextID], 0xE6E6E6F0, string);
                         
                         mysql_format(SQL_ID, query, sizeof query, "UPDATE `actor_database`.`actor` SET `name` = '%s', `skinid` = '%i', `qnumber` = '%i', `lib` = '%s', `namea` = '%s' WHERE  `UID` = '%i';",
@@ -873,8 +873,8 @@ function OnLoadAllCreateActor()
                 cache_get_value_name(i, "lib", ActorCache[id][aLib]);
                 cache_get_value_name(i, "namea", ActorCache[id][aNamea]);
 
-                if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "%i. %s\n(Naciśnij N aby wejść w interakcje)", id, ActorCache[id][aName]);
-                else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){00EBFF}\n(Naciśnij N aby wejść w interakcje)", id, ActorCache[id][aName]);
+                if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "{E6E6F0}%i. %s\n(Naciśnij N aby wejść w interakcje)", id, ActorCache[id][aName]);
+                else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){E6E6F0}\n(Naciśnij N aby wejść w interakcje)", id, ActorCache[id][aName]);
                 ActorCache[id][aID] = CreateDynamicActor(ActorCache[id][aSkin], ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ], ActorCache[id][aPosRot], true, 100.0, 0, 0, -1);
                 PreloadActorAnimations(ActorCache[id][aID]);
                 ActorCache[id][a3DTextID] = CreateDynamic3DTextLabel(string, 0xE6E6E6F0, ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ] + 1.065, 6.0);
@@ -926,8 +926,8 @@ function OnLoadCreateActor()
             cache_get_value_name(0, "lib", ActorCache[id][aLib]);
             cache_get_value_name(0, "namea", ActorCache[id][aNamea]);
 
-            if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "%i. %s\n(Naciśnij N aby wejść w interakcje)", id, ActorCache[id][aName]);
-            else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){00EBFF}\n(Naciśnij N aby wejść w interakcje)", id, ActorCache[id][aName]);
+            if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "{E6E6F0}%i. %s\n(Naciśnij N aby wejść w interakcje)", id, ActorCache[id][aName]);
+            else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){E6E6F0}\n(Naciśnij N aby wejść w interakcje)", id, ActorCache[id][aName]);
             ActorCache[id][aID] = CreateDynamicActor(ActorCache[id][aSkin], ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ], ActorCache[id][aPosRot], true, 100.0, 0, 0, -1);
             PreloadActorAnimations(ActorCache[id][aID]);
             ActorCache[id][a3DTextID] = CreateDynamic3DTextLabel(string, 0xE6E6E6F0, ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ] + 1.065, 6.0);

@@ -3,12 +3,19 @@
 Dynamic Actors System (Beta 3.0) [MySQL BlueG R41-4] by Zyzu
 
 Credits:
+
 a_samp: SAMP Team
+
 a_mysql: BlueG
+
 YSI/sscanf: Y-Less
+
 ZCMD: Zeex
+
 Streamer: Incognito
+
 Design Create/Edit Panel: Nickk888
+
 
 Information:
 
@@ -28,4 +35,5 @@ Jit 2.4 released for windows or Jit 2.4.1 released for linux.
 Commands:
 
 /acreate - Create new actor
+
 /aedit - You are editing an existing actor

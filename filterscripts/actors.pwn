@@ -40,6 +40,7 @@ Commands:
 
 #define DEBUG false
 #define function%0(%1) forward %0(%1); public %0(%1)
+#define ADD_DIALOG_ID (2222)
 
 //SETTINGS DATABASE
 #define DB_HOST     "localhost"      //Host do bazy MySQL
@@ -48,14 +49,14 @@ Commands:
 #define DB_DATABASE "actor_database" //Nazwa bazy MySQL
 
 //DIALOG ID
-#define D_ACCREATE 0
-#define D_ACNAME 1
-#define D_ACSKIN 2
-#define D_ACEDIT 3
-#define D_AENAME 4
-#define D_AESKIN 5
-#define D_ACTORANIM 6
-#define D_ACTORANIM2 7
+#define D_ACCREATE      (ADD_DIALOG_ID + 0)
+#define D_ACNAME        (ADD_DIALOG_ID + 1)
+#define D_ACSKIN        (ADD_DIALOG_ID + 2)
+#define D_ACEDIT        (ADD_DIALOG_ID + 3)
+#define D_AENAME        (ADD_DIALOG_ID + 4)
+#define D_AESKIN        (ADD_DIALOG_ID + 5)
+#define D_ACTORANIM     (ADD_DIALOG_ID + 6)
+#define D_ACTORANIM2    (ADD_DIALOG_ID + 7)
 
 //LIMITES
 #define MAX_ACTORS_RANGE 1.0

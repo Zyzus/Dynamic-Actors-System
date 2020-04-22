@@ -355,6 +355,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                             format(ActorCreate[playerid][ac_Namea], 24, ActorCache[id][aNamea]);
                         else format(ActorCache[id][aNamea], 24, ActorCreate[playerid][ac_Namea]);
                         ActorCache[id][questnumber] = ActorCreate[playerid][ac_qnumber];
+
+                        if(ActorCreate[playerid][ac_skinid] == 0)
+                            ActorCreate[playerid][ac_skinid] = ActorCache[id][aSkin];
+
                         Streamer_SetIntData(STREAMER_TYPE_ACTOR, ActorCache[ActorCreate[playerid][ae_IDActor]][aID], E_STREAMER_MODEL_ID, ActorCreate[playerid][ac_skinid]);
                         if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "%i. %s\n(Naciśnij N aby wejść w interakcje)", id, ActorCreate[playerid][ac_name]);
                         else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){FFFFFF}\n(Naciśnij N aby wejść w interakcje)", id, ActorCreate[playerid][ac_name]);
@@ -456,7 +460,7 @@ stock CreateActors(playerid, bool:clear = false)
     format(string, sizeof string, "%s{FFFFFF}Rotacja:\t{00B9FF}%0.2f\n", string, ActorCreate[playerid][ac_posRot]);
     format(string, sizeof string, "%s{FFFFFF}Skin ID:\t{00B9FF}%i\n", string, ActorCreate[playerid][ac_skinid]);
     format(string, sizeof string, "%s{FFFFFF}Rola aktora:\t{00B9FF}%s\n", string, (ActorCreate[playerid][ac_qnumber] == 0) ? ("Statysta") : ("Pracodawca"));
-    format(string, sizeof string, "%s{FFFFFF}Animacja:\t{00B9FF}%s\n", string, ActorCreate[playerid][ac_animname]);
+    format(string, sizeof string, "%s{FFFFFF}Animacja:\t{00B9FF}%s{FFFFFF}(Nie wybieraj animacji jeżeli chcesz aby aktor jej nie posiadał)\n", string, ActorCreate[playerid][ac_animname]);
     format(string, sizeof string, "%s{00B9FF}Stwórz...", string);
     ShowPlayerDialog(playerid, D_ACCREATE, DIALOG_STYLE_TABLIST_HEADERS, "Tworzenie aktora", string, "Ok", "Anuluj");
     return 1;
@@ -473,11 +477,12 @@ stock EditActor(playerid, bool:clear = false)
         format(ActorCreate[playerid][ac_Namea], 24, "");
         ActorCreate[playerid][ac_skinid] = 0;
         ActorCreate[playerid][ac_qnumber] = 0;
+        ActorCreate[playerid][ac_skinid] = 0;
         return 1;
     }
     format(string, sizeof string, "%sOpcja\tWartość\n", string);
-    format(string, sizeof string, "%s{FFFFFF}Nazwa aktora:\t{00B9FF}%s\n", string, ActorCreate[playerid][ac_name]);
-    format(string, sizeof string, "%s{FFFFFF}Skin ID:\t{00B9FF}%i\n", string, ActorCreate[playerid][ac_skinid]);
+    format(string, sizeof string, "%s{FFFFFF}Nazwa aktora:\t{00B9FF}%s{FFFFFF}(Nie zmieniając nazwy, nazwa pozostanie taka sama)\n", string, ActorCreate[playerid][ac_name]);
+    format(string, sizeof string, "%s{FFFFFF}Skin ID:\t{00B9FF}%i{FFFFFF}(Nie zmieniając skina skin pozostanie taki sam)\n", string, ActorCreate[playerid][ac_skinid]);
     format(string, sizeof string, "%s{FFFFFF}Rola aktora:\t{00B9FF}%s\n", string, (ActorCreate[playerid][ac_qnumber] == 0) ? ("Statysta") : ("Pracodawca"));
     format(string, sizeof string, "%s{FFFFFF}Animacja:\t{00B9FF}%s{FFFFFF}(Nie wybierając innej animacji animacja pozostanie ta sama)\n", string, ActorCreate[playerid][ac_animname]);
     format(string, sizeof string, "%s{00B9FF}Edytuj...\n", string);

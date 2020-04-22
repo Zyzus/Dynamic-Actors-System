@@ -43,8 +43,8 @@ Commands:
 
 //SETTINGS DATABASE
 #define DB_HOST     "localhost"      //Host do bazy MySQL
-#define DB_USER     "testowy"        //Nazwa u≈ºytkownika do bazy MySQL
-#define DB_PASSWORD "123456"         //Has≈Ço u≈ºytkownika do bazy MySQL
+#define DB_USER     "testowy"        //Nazwa uøytkownika do bazy MySQL
+#define DB_PASSWORD "123456"         //Has≥o uøytkownika do bazy MySQL
 #define DB_DATABASE "actor_database" //Nazwa bazy MySQL
 
 //DIALOG ID
@@ -158,11 +158,11 @@ static s_AnimationLibraries[][] = {
 };
 
 static SpeakTextActor[][] = {
-    "{FFFFFF}Siemka co s≈Çychaƒá? {B400FF}**u≈õmiecha siƒô**{FFFFFF}", "{FFFFFF}Witam w czym mogƒô pom√≥c?",
+    "{FFFFFF}Siemka co s≥ychaÊ? {B400FF}**uúmiecha siÍ**{FFFFFF}", "{FFFFFF}Witam w czym mogÍ pomÛc?",
     "{FFFFFF}Jak leci?", "{FFFFFF}Hmmm...",
-    "{FFFFFF}Nie mam czasu, pogadaj z kim≈õ innym.", "{FFFFFF}≈Åadne mam ubranie dzisiaj kupi≈Çem.{B400FF}**puszcza oczko**{FFFFFF}",
-    "{FFFFFF}Cze≈õƒá.", "{FFFFFF}Co tam?",
-    "{FFFFFF}S≈Çysza≈Çe≈õ? Chyba co≈õ wybuch≈Ço.", "{FFFFFF}Chyba pojadƒô na ryby."
+    "{FFFFFF}Nie mam czasu, pogadaj z kimú innym.", "{FFFFFF}£adne mam ubranie dzisiaj kupi≥em.{B400FF}**puszcza oczko**{FFFFFF}",
+    "{FFFFFF}CzeúÊ.", "{FFFFFF}Co tam?",
+    "{FFFFFF}S≥ysza≥eú? Chyba coú wybuch≥o.", "{FFFFFF}Chyba pojadÍ na ryby."
 };
 
 main(){}
@@ -189,6 +189,7 @@ public OnFilterScriptExit()
 public OnPlayerConnect(playerid)
 {
     PreloadAllAnimLibs(playerid);
+    ResetPlayerData(playerid);
     return 1;
 }
 
@@ -202,8 +203,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             {
                 switch(listitem)
                 {
-                    case 0: ShowPlayerDialog(playerid, D_ACNAME, DIALOG_STYLE_INPUT, "Tworzenie aktora > nazwa", "Wpisz nazwe aktora\nNp: William Syd", "Potwierd≈∫", "Anuluj");
-                    case 5: ShowPlayerDialog(playerid, D_ACSKIN, DIALOG_STYLE_INPUT, "Tworzenie aktora > skin", "Wpisz ID skina\nNp: 271 - ryder", "Potwierd≈∫", "Anuluj");
+                    case 0: ShowPlayerDialog(playerid, D_ACNAME, DIALOG_STYLE_INPUT, "Tworzenie aktora > nazwa", "Wpisz nazwe aktora\nNp: William Syd", "Potwierdü", "Anuluj");
+                    case 5: ShowPlayerDialog(playerid, D_ACSKIN, DIALOG_STYLE_INPUT, "Tworzenie aktora > skin", "Wpisz ID skina\nNp: 271 - ryder", "Potwierdü", "Anuluj");
                     case 6:
                     {
                         if(ActorCreate[playerid][ac_qnumber] == 0)
@@ -224,7 +225,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                         }
                         
                         if(strlen( list_anims ) != 0) ShowPlayerDialog(playerid, D_ACTORANIM, DIALOG_STYLE_LIST, "Animacje", list_anims, "Ok", "Zamknij");
-                        else SendClientMessage(playerid, -1, "Nie znaleziono animacji. Skontaktuj siƒô z administracjƒÖ serwera!");
+                        else SendClientMessage(playerid, -1, "Nie znaleziono animacji. Skontaktuj siÍ z administracjπ serwera!");
                     }
                     case 8:
                     {
@@ -265,7 +266,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 if(!sscanf(inputtext, "s[33]", name))
                     format(ActorCreate[playerid][ac_name], 33, "%s", name),
                     CreateActors(playerid);
-                else ShowPlayerDialog(playerid, D_ACNAME, DIALOG_STYLE_INPUT, "Tworzenie aktora > nazwa", "Wpisz nazwe aktora\nNp: William Syd\nB≈Çedna nazwa!", "Potwierd≈∫", "Anuluj");
+                else ShowPlayerDialog(playerid, D_ACNAME, DIALOG_STYLE_INPUT, "Tworzenie aktora > nazwa", "Wpisz nazwe aktora\nNp: William Syd\nB≥edna nazwa!", "Potwierdü", "Anuluj");
             }
             return 1;
         }
@@ -278,7 +279,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 if(!sscanf(inputtext, "i", id))
                     ActorCreate[playerid][ac_skinid] = id,
                     CreateActors(playerid);
-                else ShowPlayerDialog(playerid, D_ACSKIN, DIALOG_STYLE_INPUT, "Tworzenie aktora > skin", "Wpisz ID skina\nNp: 172 - ryder\nB≈Çƒôdne ID", "Potwierd≈∫", "Anuluj");
+                else ShowPlayerDialog(playerid, D_ACSKIN, DIALOG_STYLE_INPUT, "Tworzenie aktora > skin", "Wpisz ID skina\nNp: 172 - ryder\nB≥Ídne ID", "Potwierdü", "Anuluj");
             }
             return 1;
         }
@@ -291,7 +292,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 if(!sscanf(inputtext, "s[33]", name))
                     format(ActorCreate[playerid][ac_name], 33, "%s", name),
                     EditActor(playerid);
-                else ShowPlayerDialog(playerid, D_AENAME, DIALOG_STYLE_INPUT, "Edycja aktora > nazwa", "Wpisz nazwe aktora\nNp: William Syd\nB≈Çedna nazwa!", "Potwierd≈∫", "Anuluj");
+                else ShowPlayerDialog(playerid, D_AENAME, DIALOG_STYLE_INPUT, "Edycja aktora > nazwa", "Wpisz nazwe aktora\nNp: William Syd\nB≥edna nazwa!", "Potwierdü", "Anuluj");
             }
             return 1;
         }
@@ -304,7 +305,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 if(!sscanf(inputtext, "i", id))
                     ActorCreate[playerid][ac_skinid] = id,
                     EditActor(playerid);
-                else ShowPlayerDialog(playerid, D_AESKIN, DIALOG_STYLE_INPUT, "Edycja aktora > skin", "Wpisz ID skina\nNp: 172 - ryder\nB≈Çƒôdne ID", "Potwierd≈∫", "Anuluj");
+                else ShowPlayerDialog(playerid, D_AESKIN, DIALOG_STYLE_INPUT, "Edycja aktora > skin", "Wpisz ID skina\nNp: 172 - ryder\nB≥Ídne ID", "Potwierdü", "Anuluj");
             }
             return 1;
         }
@@ -316,8 +317,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 query = "";
                 switch(listitem)
                 {
-                    case 0: ShowPlayerDialog(playerid, D_AENAME, DIALOG_STYLE_INPUT, "Edycja aktora > nazwa", "Wpisz nazwe aktora\nNp: William Syd\nPozostawienie pola nie zmieniajƒÖc nazwy zachowa starƒÖ nazwe Aktora.", "Potwierd≈∫", "Anuluj");
-                    case 1: ShowPlayerDialog(playerid, D_AESKIN, DIALOG_STYLE_INPUT, "Edycja aktora > skin", "Wpisz ID skina\nNp: 271 - ryder", "Potwierd≈∫", "Anuluj");
+                    case 0: ShowPlayerDialog(playerid, D_AENAME, DIALOG_STYLE_INPUT, "Edycja aktora > nazwa", "Wpisz nazwe aktora\nNp: William Syd\nPozostawienie pola nie zmieniajπc nazwy zachowa starπ nazwe Aktora.", "Potwierdü", "Anuluj");
+                    case 1: ShowPlayerDialog(playerid, D_AESKIN, DIALOG_STYLE_INPUT, "Edycja aktora > skin", "Wpisz ID skina\nNp: 271 - ryder", "Potwierdü", "Anuluj");
                     case 2:
                     {
                         if(ActorCreate[playerid][ac_qnumber] == 0)
@@ -338,7 +339,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                         }
                         
                         if(strlen( list_anims ) != 0) ShowPlayerDialog(playerid, D_ACTORANIM2, DIALOG_STYLE_LIST, "Edycja Aktora Animacje", list_anims, "Ok", "Zamknij");
-                        else SendClientMessage(playerid, -1, "Nie znaleziono animacji. Skontaktuj siƒô z administracjƒÖ serwera!");
+                        else SendClientMessage(playerid, -1, "Nie znaleziono animacji. Skontaktuj siÍ z administracjπ serwera!");
                     }
                     case 4:
                     {
@@ -360,8 +361,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                             ActorCreate[playerid][ac_skinid] = ActorCache[id][aSkin];
 
                         Streamer_SetIntData(STREAMER_TYPE_ACTOR, ActorCache[ActorCreate[playerid][ae_IDActor]][aID], E_STREAMER_MODEL_ID, ActorCreate[playerid][ac_skinid]);
-                        if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "%i. %s\n(Naci≈õnij N aby wej≈õƒá w interakcje)", id, ActorCreate[playerid][ac_name]);
-                        else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){FFFFFF}\n(Naci≈õnij N aby wej≈õƒá w interakcje)", id, ActorCreate[playerid][ac_name]);
+                        if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "%i. %s\n(Naciúnij N aby wejúÊ w interakcje)", id, ActorCreate[playerid][ac_name]);
+                        else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){FFFFFF}\n(Naciúnij N aby wejúÊ w interakcje)", id, ActorCreate[playerid][ac_name]);
                         UpdateDynamic3DTextLabelText(ActorCache[id][a3DTextID], 0xE6E6E6F0, string);
                         
                         mysql_format(SQL_ID, query, sizeof query, "UPDATE `actor_database`.`actor` SET `name` = '%s', `skinid` = '%i', `qnumber` = '%i', `lib` = '%s', `namea` = '%s' WHERE  `UID` = '%i';",
@@ -394,12 +395,12 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
         {
             if(ActorCache[actorid][questnumber] == 0)
             {
-                format(string, sizeof string, "%s m√≥wi: %s", ActorCache[actorid][aName], SpeakTextActor[random(sizeof SpeakTextActor)]);
+                format(string, sizeof string, "%s mÛwi: %s", ActorCache[actorid][aName], SpeakTextActor[random(sizeof SpeakTextActor)]);
                 SendClientMessage(playerid, -1, string);
             }
             else if(ActorCache[actorid][questnumber] == 1)
             {
-                format(string, sizeof string, "%s m√≥wi: Cze≈õƒá jestem pracodawcƒÖ mo≈ºesz tutaj zaimplementowaƒá sw√≥j skrypt na prace.", ActorCache[actorid][aName]);
+                format(string, sizeof string, "%s mÛwi: CzeúÊ jestem pracodawcπ moøesz tutaj zaimplementowaÊ swÛj skrypt na prace.", ActorCache[actorid][aName]);
                 SendClientMessage(playerid, -1, string);
             }
         }
@@ -433,8 +434,8 @@ CMD:aedit(playerid, params[])
         if(IsValidDynamicActor(ActorCache[id][aID]))
             ActorCreate[playerid][ae_IDActor] = id,
             EditActor(playerid);
-        else SendClientMessage(playerid, -1, "[B≈ÅAD] Niepoprawne {FF0000}ID{FFFFFF} Aktora");
-    else SendClientMessage(playerid, -1, "[B≈ÅAD] Niepoprawne {FF0000}ID{FFFFFF} Aktora");
+        else SendClientMessage(playerid, -1, "[B£AD] Niepoprawne {FF0000}ID{FFFFFF} Aktora");
+    else SendClientMessage(playerid, -1, "[B£AD] Niepoprawne {FF0000}ID{FFFFFF} Aktora");
     return 1;
 }
 
@@ -452,7 +453,7 @@ stock CreateActors(playerid, bool:clear = false)
     }
     GetPlayerPos(playerid, ActorCreate[playerid][ac_posX], ActorCreate[playerid][ac_posY], ActorCreate[playerid][ac_posZ]);
     GetPlayerFacingAngle(playerid, ActorCreate[playerid][ac_posRot]);
-    format(string, sizeof string, "%sOpcja\tWarto≈õƒá\n", string);
+    format(string, sizeof string, "%sOpcja\tWartoúÊ\n", string);
     format(string, sizeof string, "%s{FFFFFF}Nazwa aktora:\t{00B9FF}%s\n", string, ActorCreate[playerid][ac_name]);
     format(string, sizeof string, "%s{FFFFFF}Pozycja X:\t{00B9FF}%0.2f\n", string, ActorCreate[playerid][ac_posX]);
     format(string, sizeof string, "%s{FFFFFF}Pozycja Y:\t{00B9FF}%0.2f\n", string, ActorCreate[playerid][ac_posY]);
@@ -460,8 +461,8 @@ stock CreateActors(playerid, bool:clear = false)
     format(string, sizeof string, "%s{FFFFFF}Rotacja:\t{00B9FF}%0.2f\n", string, ActorCreate[playerid][ac_posRot]);
     format(string, sizeof string, "%s{FFFFFF}Skin ID:\t{00B9FF}%i\n", string, ActorCreate[playerid][ac_skinid]);
     format(string, sizeof string, "%s{FFFFFF}Rola aktora:\t{00B9FF}%s\n", string, (ActorCreate[playerid][ac_qnumber] == 0) ? ("Statysta") : ("Pracodawca"));
-    format(string, sizeof string, "%s{FFFFFF}Animacja:\t{00B9FF}%s{FFFFFF}(Nie wybieraj animacji je≈ºeli chcesz aby aktor jej nie posiada≈Ç)\n", string, ActorCreate[playerid][ac_animname]);
-    format(string, sizeof string, "%s{00B9FF}Stw√≥rz...", string);
+    format(string, sizeof string, "%s{FFFFFF}Animacja:\t{00B9FF}%s{FFFFFF}(Nie wybieraj animacji jeøeli chcesz aby aktor jej nie posiada≥)\n", string, ActorCreate[playerid][ac_animname]);
+    format(string, sizeof string, "%s{00B9FF}StwÛrz...", string);
     ShowPlayerDialog(playerid, D_ACCREATE, DIALOG_STYLE_TABLIST_HEADERS, "Tworzenie aktora", string, "Ok", "Anuluj");
     return 1;
 }
@@ -480,13 +481,13 @@ stock EditActor(playerid, bool:clear = false)
         ActorCreate[playerid][ac_skinid] = 0;
         return 1;
     }
-    format(string, sizeof string, "%sOpcja\tWarto≈õƒá\n", string);
-    format(string, sizeof string, "%s{FFFFFF}Nazwa aktora:\t{00B9FF}%s{FFFFFF}(Nie zmieniajƒÖc nazwy, nazwa pozostanie taka sama)\n", string, ActorCreate[playerid][ac_name]);
-    format(string, sizeof string, "%s{FFFFFF}Skin ID:\t{00B9FF}%i{FFFFFF}(Nie zmieniajƒÖc skina skin pozostanie taki sam)\n", string, ActorCreate[playerid][ac_skinid]);
+    format(string, sizeof string, "%sOpcja\tWartoúÊ\n", string);
+    format(string, sizeof string, "%s{FFFFFF}Nazwa aktora:\t{00B9FF}%s{FFFFFF}(Nie zmieniajπc nazwy, nazwa pozostanie taka sama)\n", string, ActorCreate[playerid][ac_name]);
+    format(string, sizeof string, "%s{FFFFFF}Skin ID:\t{00B9FF}%i{FFFFFF}(Nie zmieniajπc skina skin pozostanie taki sam)\n", string, ActorCreate[playerid][ac_skinid]);
     format(string, sizeof string, "%s{FFFFFF}Rola aktora:\t{00B9FF}%s\n", string, (ActorCreate[playerid][ac_qnumber] == 0) ? ("Statysta") : ("Pracodawca"));
-    format(string, sizeof string, "%s{FFFFFF}Animacja:\t{00B9FF}%s{FFFFFF}(Nie wybierajƒÖc innej animacji animacja pozostanie ta sama)\n", string, ActorCreate[playerid][ac_animname]);
+    format(string, sizeof string, "%s{FFFFFF}Animacja:\t{00B9FF}%s{FFFFFF}(Nie wybierajπc innej animacji animacja pozostanie ta sama)\n", string, ActorCreate[playerid][ac_animname]);
     format(string, sizeof string, "%s{00B9FF}Edytuj...\n", string);
-    format(string, sizeof string, "%s{00B9FF}Usu≈Ñ...", string);
+    format(string, sizeof string, "%s{00B9FF}UsuÒ...", string);
     ShowPlayerDialog(playerid, D_ACEDIT, DIALOG_STYLE_TABLIST_HEADERS, "Edycja aktora", string, "Ok", "Anuluj");
     return 1;
 }
@@ -623,6 +624,13 @@ stock static PreloadActorAnimations(actorid){
     for(new i = 0; i < sizeof(s_AnimationLibraries); i ++){
         ApplyDynamicActorAnimation(actorid, s_AnimationLibraries[i], "null", 0.0, 0, 0, 0, 0, 0);
     }
+}
+
+stock ResetPlayerData(playerid)
+{
+	static const null_players[ACTOR_CREATE];
+	ActorCreate[playerid] =  null_players;
+	return 1;
 }
 
 stock CreateTableMySQL()
@@ -864,8 +872,8 @@ function OnLoadAllCreateActor()
                 cache_get_value_name(i, "lib", ActorCache[id][aLib]);
                 cache_get_value_name(i, "namea", ActorCache[id][aNamea]);
 
-                if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "%i. %s\n(Naci≈õnij N aby wej≈õƒá w interakcje)", id, ActorCache[id][aName]);
-                else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){FFFFFF}\n(Naci≈õnij N aby wej≈õƒá w interakcje)", id, ActorCache[id][aName]);
+                if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "%i. %s\n(Naciúnij N aby wejúÊ w interakcje)", id, ActorCache[id][aName]);
+                else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){FFFFFF}\n(Naciúnij N aby wejúÊ w interakcje)", id, ActorCache[id][aName]);
                 ActorCache[id][aID] = CreateDynamicActor(ActorCache[id][aSkin], ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ], ActorCache[id][aPosRot], true, 100.0, 0, 0, -1);
                 PreloadActorAnimations(ActorCache[id][aID]);
                 ActorCache[id][a3DTextID] = CreateDynamic3DTextLabel(string, 0xE6E6E6F0, ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ] + 1.065, 6.0);
@@ -877,13 +885,13 @@ function OnLoadAllCreateActor()
             }
             else
             {
-                print("[INIT] Brak wolnych slot√≥w w Iteratorze.");
+                print("[INIT] Brak wolnych slotÛw w Iteratorze.");
                 break;
             }
         }
-        printf("[INIT] Za≈Çadowano %i aktor√≥w w %ims.", cache_num_rows(), GetTickCount() - tick);
+        printf("[INIT] Za≥adowano %i aktorÛw w %ims.", cache_num_rows(), GetTickCount() - tick);
     }
-    else print("[INIT] Brak aktor√≥w w bazie danych.");
+    else print("[INIT] Brak aktorÛw w bazie danych.");
     return 1;
 }
 
@@ -917,15 +925,15 @@ function OnLoadCreateActor()
             cache_get_value_name(0, "lib", ActorCache[id][aLib]);
             cache_get_value_name(0, "namea", ActorCache[id][aNamea]);
 
-            if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "%i. %s\n(Naci≈õnij N aby wej≈õƒá w interakcje)", id, ActorCache[id][aName]);
-            else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){FFFFFF}\n(Naci≈õnij N aby wej≈õƒá w interakcje)", id, ActorCache[id][aName]);
+            if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "%i. %s\n(Naciúnij N aby wejúÊ w interakcje)", id, ActorCache[id][aName]);
+            else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){FFFFFF}\n(Naciúnij N aby wejúÊ w interakcje)", id, ActorCache[id][aName]);
             ActorCache[id][aID] = CreateDynamicActor(ActorCache[id][aSkin], ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ], ActorCache[id][aPosRot], true, 100.0, 0, 0, -1);
             PreloadActorAnimations(ActorCache[id][aID]);
             ActorCache[id][a3DTextID] = CreateDynamic3DTextLabel(string, 0xE6E6E6F0, ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ] + 1.065, 6.0);
             Iter_Add(Actor_Iter, id);
             if(strlen(ActorCache[id][aLib]) > 0) ApplyDynamicActorAnimation(ActorCache[id][aID], ActorCache[id][aLib], ActorCache[id][aNamea], 4.1, 1, 0, 0, 0, 0);
         }
-        else print("[INIT] Brak wolnych slot√≥w w Iteratorze.");
+        else print("[INIT] Brak wolnych slotÛw w Iteratorze.");
     }
     return 1;
 }

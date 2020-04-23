@@ -191,6 +191,7 @@ public OnPlayerConnect(playerid)
 {
     PreloadAllAnimLibs(playerid);
     ResetPlayerData(playerid);
+    EnablePlayerCameraTarget(playerid, true);
     return 1;
 }
 
@@ -391,7 +392,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
     if(PRESSED(KEY_NO)) // Key 'N'
     {
         new string[248];
-        new actorid = GetPlayerTargetCameraDynActor(playerid);
+        new actorid = (GetPlayerCameraTargetDynActor(playerid)-1);
         if(IsValidDynamicActor(ActorCache[actorid][aID]))
         {
             if(ActorCache[actorid][questnumber] == 0)
@@ -833,23 +834,6 @@ stock CreateTableMySQL()
 	(167, 'ranny5', 'CRACK', 'crckidle4', 4, 1, 0, 0, 0, 0, 1), \
 	(168, '.bronidz', 'POLICE', 'Cop_move_FWD', 6, 1, 0, 0, 0, 0, 1);");
     return 1;
-}
-
-stock GetPlayerTargetCameraDynActor(playerid)
-{
-	new Float:aDistance[2] = {MAX_ACTORS_RANGE, 0.0}, actorID = -1;
-	foreach(new actor : Actor_Iter)
-	{
-		aDistance[1] = GetPlayerDistanceFromPoint(playerid, ActorCache[actor][aPosX], ActorCache[actor][aPosY], ActorCache[actor][aPosZ]);
-
-		if (aDistance[1] < aDistance[0])
-		{
-		    aDistance[0] = aDistance[1];
-		    actorID = actor;
-            break;
-		}
-	}
-	return actorID;
 }
 
 function OnLoadAllCreateActor()

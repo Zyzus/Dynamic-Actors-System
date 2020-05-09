@@ -38,7 +38,7 @@ Commands:
 #include <zcmd>
 #include <streamer>
 
-#define DEBUG true
+#define DEBUG false
 #define function%0(%1) forward %0(%1); public %0(%1)
 #define ADD_DIALOG_ID (2222)
 
@@ -46,10 +46,10 @@ Commands:
 #define GENDER_FEMALE   (1)
 
 //SETTINGS DATABASE
-#define DB_HOST     "localhost"      //Host do bazy MySQL
-#define DB_USER     "testowy"        //Nazwa u¿ytkownika do bazy MySQL
-#define DB_PASSWORD "123456"         //Has³o u¿ytkownika do bazy MySQL
-#define DB_DATABASE "actor_database" //Nazwa bazy MySQL
+#define DB_HOST     ""      //Host do bazy MySQL
+#define DB_USER     ""        //Nazwa u¿ytkownika do bazy MySQL
+#define DB_PASSWORD ""         //Has³o u¿ytkownika do bazy MySQL
+#define DB_DATABASE "" //Nazwa bazy MySQL
 
 //DIALOG ID
 #define D_ACCREATE      (ADD_DIALOG_ID + 0)
@@ -66,7 +66,7 @@ Commands:
 #define MAX_ANIMS 163
 
 //Variable
-new MySQL:SQL_ID;
+new MySQL:DSA_SQL;
 new query[528];
 
 //Iterators
@@ -101,6 +101,8 @@ enum E_ACTOR
 	Float:aPosY,
 	Float:aPosZ,
 	Float:aPosRot,
+    aVW,
+    aInterior,
 	aSkin,
     aGender,
 	questnumber,
@@ -204,7 +206,7 @@ public OnFilterScriptInit()
 
 public OnFilterScriptExit()
 {
-    mysql_close(SQL_ID);
+    mysql_close(DSA_SQL);
     DestroyAllActors();
     return 1;
 }
@@ -262,7 +264,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                     }
                     case 9:
                     {
-                        NewCreateActor(ActorCreate[playerid][ac_name], ActorCreate[playerid][ac_posX], ActorCreate[playerid][ac_posY], ActorCreate[playerid][ac_posZ], ActorCreate[playerid][ac_posRot], ActorCreate[playerid][ac_skinid], ActorCreate[playerid][ac_gender], ActorCreate[playerid][ac_qnumber], ActorCreate[playerid][ac_Lib], ActorCreate[playerid][ac_Namea]);
+                        NewCreateActor(ActorCreate[playerid][ac_name], ActorCreate[playerid][ac_posX], ActorCreate[playerid][ac_posY], ActorCreate[playerid][ac_posZ], ActorCreate[playerid][ac_posRot], GetPlayerVirtualWorld(playerid), GetPlayerInterior(playerid), ActorCreate[playerid][ac_skinid], ActorCreate[playerid][ac_gender], ActorCreate[playerid][ac_qnumber], ActorCreate[playerid][ac_Lib], ActorCreate[playerid][ac_Namea]);
                         CreateActors(playerid, true);
                     }
                 }
@@ -403,13 +405,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                             ActorCreate[playerid][ac_skinid] = ActorCache[id][aSkin];
 
                         Streamer_SetIntData(STREAMER_TYPE_ACTOR, ActorCache[ActorCreate[playerid][ae_IDActor]][aID], E_STREAMER_MODEL_ID, ActorCreate[playerid][ac_skinid]);
-                        if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "{E6E6F0}%i. %s\n(Naciœnij N aby wejœæ w interakcje)", id, ActorCache[id][aName]);
-                        else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){E6E6F0}\n(Naciœnij N aby wejœæ w interakcje)", id, ActorCache[id][aName]);
+                        if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "{E6E6F0}%s • %i\n(Naciœnij N aby wejœæ w interakcje)", ActorCache[id][aName], id);
+                        else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%s • %i{00EBFF}(Pracodawca){E6E6F0}\n(Naciœnij N aby wejœæ w interakcje)", ActorCache[id][aName], id);
                         UpdateDynamic3DTextLabelText(ActorCache[id][a3DTextID], 0xE6E6E6F0, string);
                         
-                        mysql_format(SQL_ID, query, sizeof query, "UPDATE `actor_database`.`actor` SET `name` = '%s', `skinid` = '%i', `qnumber` = '%i', `lib` = '%s', `namea` = '%s' WHERE  `UID` = '%i';",
+                        mysql_format(DSA_SQL, query, sizeof query, "UPDATE `actor_database`.`actor` SET `name` = '%s', `skinid` = '%i', `qnumber` = '%i', `lib` = '%s', `namea` = '%s' WHERE  `UID` = '%i';",
                          ActorCreate[playerid][ac_name], ActorCreate[playerid][ac_skinid], ActorCreate[playerid][ac_qnumber], ActorCreate[playerid][ac_Lib], ActorCreate[playerid][ac_Namea], ActorCache[id][aUID]);
-                        mysql_tquery(SQL_ID, query);
+                        mysql_tquery(DSA_SQL, query);
                         ClearDynamicActorAnimations(ActorCache[id][aID]);
                         if(strlen(ActorCache[id][aLib]) > 0) ApplyDynamicActorAnimation(ActorCache[id][aID], ActorCreate[playerid][ac_Lib], ActorCreate[playerid][ac_Namea], 4.1, 1, 0, 0, 0, 0);
                         EditActor(playerid, true);
@@ -543,8 +545,8 @@ stock DeleteActor(playerid)
 {
     query = "";
     new id = ActorCreate[playerid][ae_IDActor];
-    mysql_format(SQL_ID, query, sizeof query, "DELETE FROM `actor_database`.`actor` WHERE `UID` = '%i'", ActorCache[id][aUID]);
-	mysql_tquery(SQL_ID, query);
+    mysql_format(DSA_SQL, query, sizeof query, "DELETE FROM `actor_database`.`actor` WHERE `UID` = '%i'", ActorCache[id][aUID]);
+	mysql_tquery(DSA_SQL, query);
 
     DestroyDynamicActor(ActorCache[id][aID]);
     DestroyDynamic3DTextLabel(ActorCache[id][a3DTextID]);
@@ -563,12 +565,12 @@ stock DeleteActor(playerid)
     return 1;
 }
 
-stock NewCreateActor(name[], Float:posX, Float:posY, Float:posZ, Float:posRot, skinid, gender = 0, qnumber = -1, libAnim[] = "SWEET", NameAnim[] = "")
+stock NewCreateActor(name[], Float:posX, Float:posY, Float:posZ, Float:posRot, vw, interior, skinid, gender = 0, qnumber = -1, libAnim[] = "SWEET", NameAnim[] = "")
 {
     query = "";
-    mysql_format(SQL_ID, query, sizeof query, "INSERT INTO actor SET name = '%s', posx = '%f', posy = '%f', posz = '%f', posrot = '%f', skinid = '%i', gender = '%i', qnumber = '%i', lib = '%s', namea = '%s'", 
-    name, posX, posY, posZ, posRot, skinid, gender, qnumber, libAnim, NameAnim);
-	mysql_tquery(SQL_ID, query, "LoadCreateActor");
+    mysql_format(DSA_SQL, query, sizeof query, "INSERT INTO actor SET name = '%s', posx = '%f', posy = '%f', posz = '%f', posrot = '%f', vw = '%i', interior = '%i', skinid = '%i', gender = '%i', qnumber = '%i', lib = '%s', namea = '%s'", 
+    name, posX, posY, posZ, posRot, vw, interior, skinid, gender, qnumber, libAnim, NameAnim);
+	mysql_tquery(DSA_SQL, query, "LoadCreateActor");
     
     return 1;
 }
@@ -576,13 +578,13 @@ stock NewCreateActor(name[], Float:posX, Float:posY, Float:posZ, Float:posRot, s
 stock LoadAllCreateActor()
 {
     query = "";
-    mysql_format(SQL_ID, query, sizeof query, "SELECT * FROM actor LIMIT %i", MAX_ACTORS);
-    mysql_tquery(SQL_ID, query, "OnLoadAllCreateActor");
+    mysql_format(DSA_SQL, query, sizeof query, "SELECT * FROM actor LIMIT %i", MAX_ACTORS);
+    mysql_tquery(DSA_SQL, query, "OnLoadAllCreateActor");
     return 1;
 }
 
 stock LoadAllAnimations()
-    return mysql_tquery(SQL_ID, "SELECT * FROM anims", "LoadAnimations");
+    return mysql_tquery(DSA_SQL, "SELECT * FROM anims", "LoadAnimations");
 
 stock DestroyAllActors()
 {
@@ -612,16 +614,16 @@ stock ConnectToDB()
 
 	new MySQLOpt: option_id = mysql_init_options();
 	mysql_set_option(option_id, AUTO_RECONNECT, true);
-	SQL_ID = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, option_id);
+	DSA_SQL = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, option_id);
 
-	if(SQL_ID == MYSQL_INVALID_HANDLE || mysql_errno(SQL_ID) != 0)
+	if(DSA_SQL == MYSQL_INVALID_HANDLE || mysql_errno(DSA_SQL) != 0)
 	{
 		print("[INIT] MySQL nie mogl nawiazac polaczenia z baza danych. Blokuje dostep do serwera!");
 		SendRconCommand("password errormysql");
 		SendRconCommand("hostname [BLAD BAZY DANYCH]");
 		return 0;
 	}
-    mysql_set_charset("cp1250_polish_ci", SQL_ID);
+    mysql_set_charset("cp1250_polish_ci", DSA_SQL);
 	print("[INIT] MySQL nawiazal polaczenie z baza danych. Wczytuje dane...");
     print("---------------------------------");
     print("Actors System by Zyzu Actived");
@@ -682,21 +684,23 @@ stock ResetPlayerData(playerid)
 
 stock CreateTableMySQL()
 {
-    mysql_tquery(SQL_ID, "CREATE TABLE `actor` ( \
+    mysql_tquery(DSA_SQL, "CREATE TABLE `actor` ( \
 	`UID` INT(11) NOT NULL AUTO_INCREMENT, \
 	`name` TINYTEXT NOT NULL COLLATE 'cp1250_polish_ci', \
 	`posx` FLOAT(12,0) NOT NULL, \
 	`posy` FLOAT(12,0) NOT NULL, \
 	`posz` FLOAT(12,0) NOT NULL, \
 	`posrot` FLOAT(12,0) NOT NULL, \
-	`skinid` FLOAT(12,0) NOT NULL, \
+	`vw` INT(11) NOT NULL, \
+	`interior` INT(11) NOT NULL, \
+	`skinid` INT(11) NOT NULL DEFAULT '0', \
 	`gender` TINYINT(4) NOT NULL DEFAULT '0', \
 	`qnumber` TINYINT(4) NOT NULL DEFAULT '0', \
 	`lib` VARCHAR(16) NULL DEFAULT 'SWEET' COLLATE 'cp1250_polish_ci', \
 	`namea` VARCHAR(24) NULL DEFAULT 'null' COLLATE 'cp1250_polish_ci', \
 	PRIMARY KEY (`UID`) USING BTREE)");
 
-    mysql_tquery(SQL_ID, "CREATE TABLE IF NOT EXISTS `anims` ( \
+    mysql_tquery(DSA_SQL, "CREATE TABLE IF NOT EXISTS `anims` ( \
 	`uid` SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT, \
 	`cmd` VARCHAR(12) NOT NULL COLLATE 'utf8_unicode_ci', \
 	`lib` VARCHAR(16) NOT NULL COLLATE 'utf8_unicode_ci', \
@@ -710,7 +714,7 @@ stock CreateTableMySQL()
 	`action` TINYINT(3) UNSIGNED NOT NULL DEFAULT '1', \
 	PRIMARY KEY (`uid`) USING BTREE)");
 
-    mysql_tquery(SQL_ID, "REPLACE INTO `anims` (`uid`, `cmd`, `lib`, `name`, `speed`, `loop/sa`, `lockx`, `locky`, `freeze`, `time`, `action`) VALUES \
+    mysql_tquery(DSA_SQL, "REPLACE INTO `anims` (`uid`, `cmd`, `lib`, `name`, `speed`, `loop/sa`, `lockx`, `locky`, `freeze`, `time`, `action`) VALUES \
 	(1, 'idz1', 'PED', 'WALK_gang1', 4.1, 1, 1, 1, 1, 1, 1), \
 	(2, 'idz2', 'PED', 'WALK_gang2', 4.1, 1, 1, 1, 1, 1, 1), \
 	(3, 'idz3', 'PED', 'WOMAN_walksexy', 4, 1, 1, 1, 1, 1, 1), \
@@ -762,7 +766,7 @@ stock CreateTableMySQL()
 	(49, 'chodz', 'POLICE', 'CopTraf_Come', 4, 0, 0, 0, 0, 0, 0), \
 	(50, 'stop', 'POLICE', 'CopTraf_Stop', 4, 0, 0, 0, 0, 0, 0);");
 
-    mysql_tquery(SQL_ID, "REPLACE INTO `anims` (`uid`, `cmd`, `lib`, `name`, `speed`, `loop/sa`, `lockx`, `locky`, `freeze`, `time`, `action`) VALUES \
+    mysql_tquery(DSA_SQL, "REPLACE INTO `anims` (`uid`, `cmd`, `lib`, `name`, `speed`, `loop/sa`, `lockx`, `locky`, `freeze`, `time`, `action`) VALUES \
 	(51, 'drapjaja', 'MISC', 'Scratchballs_01', 4, 1, 0, 0, 0, 0, 1), \
 	(52, 'opieraj2', 'MISC', 'Plyrlean_loop', 4, 1, 0, 0, 0, 0, 1), \
 	(53, 'walekonia', 'PAULNMAC', 'wank_loop', 4, 1, 0, 0, 0, 0, 1), \
@@ -814,7 +818,7 @@ stock CreateTableMySQL()
 	(99, 'wymiotuj', 'FOOD', 'EAT_Vomit_P', 3, 0, 0, 0, 0, 0, 1), \
 	(100, 'fuck2', 'RIOT', 'RIOT_FUKU', 4, 0, 0, 0, 0, 0, 0);");
 
-    mysql_tquery(SQL_ID, "REPLACE INTO `anims` (`uid`, `cmd`, `lib`, `name`, `speed`, `loop/sa`, `lockx`, `locky`, `freeze`, `time`, `action`) VALUES \
+    mysql_tquery(DSA_SQL, "REPLACE INTO `anims` (`uid`, `cmd`, `lib`, `name`, `speed`, `loop/sa`, `lockx`, `locky`, `freeze`, `time`, `action`) VALUES \
 	(101, 'koks', 'PED', 'IDLE_HBHB', 4, 1, 0, 0, 1, 0, 1), \
 	(102, 'idz7', 'PED', 'WOMAN_walkshop', 4, 1, 1, 1, 1, 1, 1), \
 	(103, 'cry', 'GRAVEYARD', 'mrnF_loop', 4, 1, 0, 0, 1, 0, 1), \
@@ -860,7 +864,7 @@ stock CreateTableMySQL()
 	(147, 'gang2', 'GANGS', 'prtial_gngtlkB', 4.1, 1, 1, 1, 1, 0, 1), \
 	(148, 'gang3', 'GANGS', 'prtial_gngtlkC', 4.1, 1, 1, 1, 1, 0, 1);");
 
-    mysql_tquery(SQL_ID, "REPLACE INTO `anims` (`uid`, `cmd`, `lib`, `name`, `speed`, `loop/sa`, `lockx`, `locky`, `freeze`, `time`, `action`) VALUES \
+    mysql_tquery(DSA_SQL, "REPLACE INTO `anims` (`uid`, `cmd`, `lib`, `name`, `speed`, `loop/sa`, `lockx`, `locky`, `freeze`, `time`, `action`) VALUES \
 	(149, 'gang4', 'GANGS', 'prtial_gngtlkD', 4.1, 1, 1, 1, 1, 0, 1), \
 	(150, 'gang5', 'GANGS', 'prtial_gngtlkE', 4.1, 1, 1, 1, 1, 0, 1), \
 	(151, 'gang6', 'GANGS', 'prtial_gngtlkF', 4.1, 1, 1, 1, 1, 0, 1), \
@@ -898,17 +902,19 @@ function OnLoadAllCreateActor()
                 cache_get_value_float(i, "posy", ActorCache[id][aPosY]);
                 cache_get_value_float(i, "posz", ActorCache[id][aPosZ]);
                 cache_get_value_float(i, "posrot", ActorCache[id][aPosRot]);
+                cache_get_value_int(i, "vw", ActorCache[id][aVW]);
+                cache_get_value_int(i, "interior", ActorCache[id][aInterior]);
                 cache_get_value_int(i, "skinid", ActorCache[id][aSkin]);
                 cache_get_value_int(i, "gender", ActorCache[id][aGender]);
                 cache_get_value_int(i, "qnumber", ActorCache[id][questnumber]);
                 cache_get_value_name(i, "lib", ActorCache[id][aLib]);
                 cache_get_value_name(i, "namea", ActorCache[id][aNamea]);
 
-                if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "{E6E6F0}%i. %s\n(Naciœnij N aby wejœæ w interakcje)", id, ActorCache[id][aName]);
-                else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){E6E6F0}\n(Naciœnij N aby wejœæ w interakcje)", id, ActorCache[id][aName]);
-                ActorCache[id][aID] = CreateDynamicActor(ActorCache[id][aSkin], ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ], ActorCache[id][aPosRot], true, 100.0, 0, 0, -1);
+                if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "{E6E6F0}%s • %i\n(Naciœnij N aby wejœæ w interakcje)", ActorCache[id][aName], id);
+                else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%s • %i{00EBFF}(Pracodawca){E6E6F0}\n(Naciœnij N aby wejœæ w interakcje)", ActorCache[id][aName], id);
+                ActorCache[id][aID] = CreateDynamicActor(ActorCache[id][aSkin], ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ], ActorCache[id][aPosRot], true, 100.0, ActorCache[id][aVW], ActorCache[id][aInterior], -1);
                 PreloadActorAnimations(ActorCache[id][aID]);
-                ActorCache[id][a3DTextID] = CreateDynamic3DTextLabel(string, 0xE6E6E6F0, ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ] + 1.065, 6.0);
+                ActorCache[id][a3DTextID] = CreateDynamic3DTextLabel(string, 0xE6E6E6F0, ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ] + 0.72, 6.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, ActorCache[id][aVW], ActorCache[id][aInterior]);
                 Iter_Add(Actor_Iter, id);
                 if(strlen(ActorCache[id][aLib]) > 0) ApplyDynamicActorAnimation(ActorCache[id][aID], ActorCache[id][aLib], ActorCache[id][aNamea], 4.1, 1, 0, 0, 0, 0);
                 #if DEBUG true
@@ -932,8 +938,8 @@ function LoadCreateActor()
     if(cache_insert_id() > 0)
     {
         query = "";
-        mysql_format(SQL_ID, query, sizeof query, "SELECT * FROM actor WHERE `UID` = '%i'", cache_insert_id());
-		mysql_tquery(SQL_ID, query, "OnLoadCreateActor");
+        mysql_format(DSA_SQL, query, sizeof query, "SELECT * FROM actor WHERE `UID` = '%i'", cache_insert_id());
+		mysql_tquery(DSA_SQL, query, "OnLoadCreateActor");
     }
     return 1;
 }
@@ -952,17 +958,19 @@ function OnLoadCreateActor()
             cache_get_value_float(0, "posy", ActorCache[id][aPosY]);
             cache_get_value_float(0, "posz", ActorCache[id][aPosZ]);
             cache_get_value_float(0, "posrot", ActorCache[id][aPosRot]);
+            cache_get_value_int(0, "vw", ActorCache[id][aVW]);
+            cache_get_value_int(0, "interior", ActorCache[id][aInterior]);
             cache_get_value_int(0, "skinid", ActorCache[id][aSkin]);
             cache_get_value_int(0, "gender", ActorCache[id][aGender]);
             cache_get_value_int(0, "qnumber", ActorCache[id][questnumber]);
             cache_get_value_name(0, "lib", ActorCache[id][aLib]);
             cache_get_value_name(0, "namea", ActorCache[id][aNamea]);
 
-            if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "{E6E6F0}%i. %s\n(Naciœnij N aby wejœæ w interakcje)", id, ActorCache[id][aName]);
-            else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%i. %s{00EBFF}(Pracodawca){E6E6F0}\n(Naciœnij N aby wejœæ w interakcje)", id, ActorCache[id][aName]);
-            ActorCache[id][aID] = CreateDynamicActor(ActorCache[id][aSkin], ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ], ActorCache[id][aPosRot], true, 100.0, 0, 0, -1);
+            if(ActorCache[id][questnumber] == 0) format(string, sizeof string, "{E6E6F0}%s • %i\n(Naciœnij N aby wejœæ w interakcje)", ActorCache[id][aName], id);
+            else if(ActorCache[id][questnumber] == 1) format(string, sizeof string, "%s • %i{00EBFF}(Pracodawca){E6E6F0}\n(Naciœnij N aby wejœæ w interakcje)", ActorCache[id][aName], id);
+            ActorCache[id][aID] = CreateDynamicActor(ActorCache[id][aSkin], ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ], ActorCache[id][aPosRot], true, 100.0, ActorCache[id][aVW], ActorCache[id][aInterior], -1);
             PreloadActorAnimations(ActorCache[id][aID]);
-            ActorCache[id][a3DTextID] = CreateDynamic3DTextLabel(string, 0xE6E6E6F0, ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ] + 1.065, 6.0);
+            ActorCache[id][a3DTextID] = CreateDynamic3DTextLabel(string, 0xE6E6E6F0, ActorCache[id][aPosX], ActorCache[id][aPosY], ActorCache[id][aPosZ] + 0.72, 6.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, ActorCache[id][aVW], ActorCache[id][aInterior]);
             Iter_Add(Actor_Iter, id);
             if(strlen(ActorCache[id][aLib]) > 0) ApplyDynamicActorAnimation(ActorCache[id][aID], ActorCache[id][aLib], ActorCache[id][aNamea], 4.1, 1, 0, 0, 0, 0);
         }
